@@ -5,8 +5,13 @@ import logging
 
 import gaussfit
 
-x, y = np.loadtxt("lorrentztest.txt", skiprows=1, unpack = True) #imports x and y data
 
+x, y = np.loadtxt("lorrentztest.txt", skiprows=1, unpack = True) #imports x and y data
+y = y/1000
+y = y**2
+#x = x*2*np.pi
+#x = x[21:56]
+#y = y[21:56]
 
 for handler in logging.root.handlers[:]:
     logging.root.removeHandler(handler)
@@ -210,8 +215,15 @@ class plot_image: #plot object
         self.axis.plot(self.fit_obj.xline, gauss.gausscombined(self.fit_obj.xline, *self.fit_obj.opt), color='red') #plot with optimal parameters
         
         
-        
+    def plotlorentz(self):
 
+
+        popt, pcov = gaussfit.lorentzfit(self.fit_obj.x, self.fit_obj.y, self.fit_obj.number_of_peaks, self.fit_obj.amps, self.fit_obj.means, self.fit_obj.stds)
+        import lorentz
+        print(popt)
+        self.axis.plot(self.fit_obj.xline, lorentz.lorentzcombined(self.fit_obj.xline, *popt))
+        
+        
 class fit_obj:
     def __init__(self, datax, datay):
         self.number_of_peaks = 0
@@ -244,6 +256,7 @@ class fit_obj:
         self.opt = opt
         self.cov = cov
         return opt, cov
+    
         
 
 
