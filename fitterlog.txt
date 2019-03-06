@@ -5,3 +5,10 @@ INFO:root:'add point' clicked
 INFO:root:point added
 INFO:root:mean added (1)
 INFO:root:amp added (1)
+INFO:root:std added (1)
+INFO:root:lorentz function arguments:
+INFO:root:A0, u0, T0
+INFO:root:lorentz file written and closed
+INFO:root:lorentz imported
+INFO:root:estimates loaded
+INFO:root:number of estimates: 3

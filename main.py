@@ -6,12 +6,10 @@ import logging
 import gaussfit
 
 
-x, y = np.loadtxt("lorentztest.txt", skiprows=1, unpack = True) #imports x and y data
-y = y/1000
-y = y**2
-#x = x*2*np.pi
-#x = x[21:56]
-#y = y[21:56]
+x, y = np.loadtxt("driven0.txt", skiprows=1, unpack = True) #imports x and y data
+#y = y/1000
+#y = y**2
+
 
 for handler in logging.root.handlers[:]:
     logging.root.removeHandler(handler)
@@ -60,10 +58,10 @@ class plot_image: #plot object
         self.s_std = None
         
         
-        self.s_amp = Slider(self.slider_amp_ax, 'Amp', 0, 1, valinit = 0.5)
+        self.s_amp = Slider(self.slider_amp_ax, 'Amp', 0, 1, valinit = 0.5, color='grey')
         self.s_amp.on_changed(self.amp_slider_changed)
         
-        self.s_mean = Slider(self.slider_mean_ax, "Mean", 0, 1, valinit = 0.5)
+        self.s_mean = Slider(self.slider_mean_ax, "Mean", 0, 1, valinit = 0.5, color='grey')
         self.s_mean.on_changed(self.mean_slider_changed)
         
         #mouse click function
@@ -149,9 +147,10 @@ class plot_image: #plot object
         
         self.std_val = value
         
-        import gauss
-        self.draw()
-        self.axis.plot(self.fit_obj.xline, gauss.gauss(self.fit_obj.xline, self.fit_obj.amps[-1], self.fit_obj.means[-1], self.std_val),  color='grey', linestyle=':')
+        if self.fit_obj.number_of_peaks != 0:
+            import gauss
+            self.draw()
+            self.axis.plot(self.fit_obj.xline, gauss.gauss(self.fit_obj.xline, self.fit_obj.amps[-1], self.fit_obj.means[-1], self.std_val),  color='grey', linestyle=':')
 
         return
         
@@ -177,10 +176,10 @@ class plot_image: #plot object
 
             plt.cla()
             
-            self.s_amp = Slider(self.slider_amp_ax, 'Amp', value.ydata - (value.ydata/10), value.ydata + (value.ydata/10), valinit = value.ydata)
+            self.s_amp = Slider(self.slider_amp_ax, 'Amp', value.ydata - (value.ydata/10), value.ydata + (value.ydata/10), valinit = value.ydata, color='grey')
             self.s_amp.on_changed(self.amp_slider_changed)
             
-            self.s_mean = Slider(self.slider_mean_ax, 'Mean', value.xdata - (value.xdata/20), value.xdata + (value.xdata/20), valinit = value.xdata)
+            self.s_mean = Slider(self.slider_mean_ax, 'Mean', value.xdata - (value.xdata/20), value.xdata + (value.xdata/20), valinit = value.xdata, color='grey')
             self.s_mean.on_changed(self.mean_slider_changed)
 
             
