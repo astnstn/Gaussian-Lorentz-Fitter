@@ -1,5 +1,6 @@
 # Gaussian/Lorentz-Fitter
 Matplotlib and scipy to fit Gaussian or Lorentzian curves to data. 
+Works ~90% of the time.
 
 Use:
 
