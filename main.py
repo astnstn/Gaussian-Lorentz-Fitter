@@ -6,7 +6,7 @@ import logging
 import gaussfit
 
 
-x, y = np.loadtxt("driven0.txt", skiprows=1, unpack = True) #imports x and y data
+x, y = np.loadtxt("1996quarter.txt", skiprows=1, unpack = True) #imports x and y data
 #y = y/1000
 #y = y**2
 
