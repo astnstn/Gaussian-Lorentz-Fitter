@@ -1,6 +1,7 @@
 # Gaussian/Lorentz-Fitter
 Matplotlib and scipy to fit Gaussian or Lorentzian curves to data. 
 Works ~90% of the time.
+Currently no option to correct for background offset
 
 Use:
 
@@ -10,3 +11,4 @@ Use:
 - set standard deviation with slider 
 - make any adjustments to mean/amplitude
 - Once done for all peaks, click fit or fit_l
+- optimal parameters are printed in console
