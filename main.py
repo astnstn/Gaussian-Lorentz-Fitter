@@ -2,21 +2,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.widgets import Button, Slider
 import logging
-
 import gaussfit
 
-
-x, y = np.loadtxt("1996quarter.txt", skiprows=1, unpack = True) #imports x and y data
-#y = y/1000
-#y = y**2
+x, y = np.loadtxt("gaussian_sample_data.txt", skiprows=1, unpack = True) #imports x and y data
 
 
 for handler in logging.root.handlers[:]:
     logging.root.removeHandler(handler)
     
 logging.basicConfig(filename='fitterlog.txt', filemode = 'w', level=logging.DEBUG)
-
-
 
 class plot_image: #plot object
     def __init__(self): #contains fit object with data points, buttons, conditions for buttons 
@@ -48,15 +42,11 @@ class plot_image: #plot object
         
         self.b_fit = Button(self.button_fit_ax, "Fit") 
         self.b_fit.on_clicked(self.applyfit)
-
-        
         
         self.b_fit_l = Button(self.button_fit_l_ax, "fit_l")
         self.b_fit_l.on_clicked(self.plotlorentz)
-
     
         self.s_std = None
-        
         
         self.s_amp = Slider(self.slider_amp_ax, 'Amp', 0, 1, valinit = 0.5, color='grey')
         self.s_amp.on_changed(self.amp_slider_changed)
@@ -67,11 +57,8 @@ class plot_image: #plot object
         #mouse click function
         self.cid = self.figure.canvas.mpl_connect('button_press_event', self.on_clicked) #mouse click event, calls on_clicked function 
         
-    
 
     def draw(self): #drawing function which redraws entire figure
-        
-        #logging.info("plot (re)drawn")
         
         ylimo = self.axis.get_ylim()
         xlimo = self.axis.get_xlim()
@@ -81,14 +68,8 @@ class plot_image: #plot object
            
         else:
             self.b_add.color = '0.95'
-        
-        
-        
-        
-        
+    
         self.axis.clear()
-        
-        
         
         #redraws data
         self.axis.plot(self.fit_obj.x, self.fit_obj.y, 'o') 
@@ -99,7 +80,6 @@ class plot_image: #plot object
         
         self.figure.show()
         
-   
     
     def amp_slider_changed(self, value):
         
@@ -113,7 +93,7 @@ class plot_image: #plot object
             self.draw()
     
     
-    #addsa fit object with data to the plot
+    #adds a fit object with data to the plot
     def addfitobject(self, datax, datay):
         
         logging.info("fit object added")
@@ -154,13 +134,12 @@ class plot_image: #plot object
 
         return
         
+    
     #main on clicked function
     def on_clicked(self, value):
       
         x = self.figure.transFigure.inverted().transform((value.x,value.y))[0]
         y = self.figure.transFigure.inverted().transform((value.x,value.y))[1]
-        
-        
         
         #condition to add point
         if self.add == True and self.in_button(x, y) == False:
@@ -181,8 +160,6 @@ class plot_image: #plot object
             
             self.s_mean = Slider(self.slider_mean_ax, 'Mean', value.xdata - (value.xdata/20), value.xdata + (value.xdata/20), valinit = value.xdata, color='grey')
             self.s_mean.on_changed(self.mean_slider_changed)
-
-            
             
             #add amplitude and mean
             self.fit_obj.means.append(value.xdata)
@@ -194,16 +171,8 @@ class plot_image: #plot object
             #self.fit_obj.stds.append(0.2)
             self.s_std.color = 'red'
             self.fit_obj.number_of_peaks += 1
-            
-            
-            #create amp slider
-            
-            
             self.draw()
             return
-        
-     
-        
         
     #detects if the mouse is in a button 
     def in_button(self, x, y):
@@ -218,6 +187,7 @@ class plot_image: #plot object
             inbutton = True
         return inbutton
         
+    
     def applyfit(self, value):
         
         logging.info("\n")
@@ -252,12 +222,9 @@ class plot_image: #plot object
 
         popt, pcov = gaussfit.lorentzfit(self.fit_obj.x, self.fit_obj.y, self.fit_obj.number_of_peaks, self.fit_obj.amps, self.fit_obj.means, self.fit_obj.stds)
         import lorentz
-        #print(popt)
+        
         self.axis.plot(self.fit_obj.xline, lorentz.lorentzcombined(self.fit_obj.xline, *popt))
     
-        
-        self.axis.set_xlabel("Frequency / Hz")
-        self.axis.set_ylabel('Intensity ' + '/ ' + r'$V^2$' )
         for i in range(0, len(popt), 3):
     
             print("Amp: {:.5f}".format(popt[i]))
@@ -283,10 +250,6 @@ class fit_obj:
         
         logging.info("\n")
         logging.info("fit function of fit_obj called")
-        
-        
-        
-        #logging.info("gaussfit imported\n")
         logging.info("number of peaks: {:.0f}".format(self.number_of_peaks))
         logging.info("amps: {:.0f}".format(len(self.amps)))
         logging.info("means: {:.0f}".format(len(self.means)))
@@ -306,7 +269,6 @@ my_plot = plot_image()
 my_plot.addfitobject(x, y)
 my_plot.draw()
 
-logging.info("TeST")
 
 
 
