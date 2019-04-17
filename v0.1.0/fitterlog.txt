@@ -1,0 +1,3 @@
+INFO:root:plot created
+INFO:root:fit object added
+INFO:root:TeST
