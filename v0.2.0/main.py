@@ -5,7 +5,6 @@ import singlegaussian
 import fit_class
 
 data = np.loadtxt("GaussTestData.txt", skiprows=1, unpack = False) #imports x and y data
-#data[:,1] += 600
 
 class Window: #plot object
     def __init__(self):
@@ -146,6 +145,21 @@ class Window: #plot object
         peakname = str(len(self.peak))
         self.peak[peakname] = [x, y, 0]
         self.current_peak = peakname
+        
+        minval = y - y/10
+        maxval = y + y/10
+        
+        self.sliderAx['Amp'].clear()
+        self.slider['Amp'] = Slider(self.sliderAx['Amp'], "Amp", minval, maxval, valinit = y, color='grey')
+        self.slider['Amp'].on_changed(self.amp_slider_changed)
+        
+        minval = x - x/10
+        maxval = x + x/10
+        
+        self.sliderAx['Mean'].clear()
+        self.slider['Mean'] = Slider(self.sliderAx['Mean'], "Mean", minval, maxval, valinit = x, color='grey')
+        self.slider['Mean'].on_changed(self.mean_slider_changed)
+        
         self.draw()
     
     def add_fit(self, lorentzian = False):
@@ -208,25 +222,37 @@ class Window: #plot object
                 self.buttonState['Gauss'] = False
         
             self.update()
-        
-    def bg_up_bound_clicked(self, event):
-        self.bounds['Background'][1] = self.background
-        return
-    
-    def bg_low_bound_clicked(self, event):
-        self.bounds['Background'][0] = self.background
-        return
-    
-    def std_low_bound_clicked(self, event):
-        return
-    
-    def std_up_bound_clicked(self, event):
-        return
     
     def amp_slider_changed(self, event):
+        self.textboxAx['Amp'].clear()
+        self.textbox['Amp'] = TextBox(self.textboxAx['Amp'], "", "{:.2f}".format(event))
+        self.textbox['Amp'].on_submit(self.amp_submit)
+        if self.current_peak:
+            self.peak[self.current_peak][1] = event
+        self.update()
         return
     
+    def amp_submit(self, event):
+        val = float(event)
+        maxval = val + self.mainAx.get_ylim()[1]/10
+        minval = val - self.mainAx.get_ylim()[1]/10
+        
+        self.sliderAx['Amp'].clear()
+        self.slider['Amp'] = Slider(self.sliderAx['Amp'], "Amp", minval, maxval, valinit = val, color='grey')
+        self.slider['Amp'].on_changed(self.amp_slider_changed)
+        
+        self.update()
+        
     def mean_slider_changed(self, event):
+        
+        self.textboxAx['Mean'].clear()
+        self.textbox['Mean'] = TextBox(self.textboxAx['Mean'], "", "{:.2f}".format(event))
+        self.textbox['Mean'].on_submit(self.mean_submit)
+        
+        if self.current_peak:
+            self.peak[self.current_peak][0] = event
+        self.update()
+        
         return
     
     def std_slider_changed(self, event):
@@ -279,10 +305,19 @@ class Window: #plot object
         return
     
     def mean_submit(self, event):
+        
+        val = float(event)
+        maxval = val + self.mainAx.get_xlim()[1]/10
+        minval = val - self.mainAx.get_xlim()[1]/10
+        
+        self.sliderAx['Mean'].clear()
+        self.slider['Mean'] = Slider(self.sliderAx['Mean'], "Mean", minval, maxval, valinit = val, color='grey')
+        self.slider['Mean'].on_changed(self.mean_slider_changed)
+        
+        self.update()
+        
         return
     
-    def amp_submit(self, event):
-        return
         
     def draw(self):
 
