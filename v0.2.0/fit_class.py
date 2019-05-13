@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from scipy.integrate import quad
+import pickle
 
 def gaussian_function_string(peaks):
         string =       (
@@ -91,6 +92,13 @@ class Fit:
         
         self.yspace = lorentzfunctions.lorentzcombined(self.xspace, *self.opt)
         
+    
+    def save_fit(self, name):
+        file = open(name + ".txt", 'wb')
+        pickle.dump(self, file)
+        file.close()
+    
+
         
         
     

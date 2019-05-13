@@ -7,7 +7,9 @@ import fit_class
 data = np.loadtxt("GaussTestData.txt", skiprows=1, unpack = False) #imports x and y data
 
 class Window: #plot object
-    def __init__(self):
+    def __init__(self, name):
+        
+        self.name = name
         self.data = None
         self.xspace = None
         self.fit = None
@@ -75,7 +77,11 @@ class Window: #plot object
         self.buttonAx['Peak+'] = plt.axes([0.895, 0.5, 0.035, 0.03])
         self.button['Peak+'] = Button(self.buttonAx['Peak+'], '>', color = 'grey')
         self.button['Peak+'].on_clicked(self.toggle_peaks_right)
-
+        
+        self.buttonAx['Save'] = plt.axes([0.83, 0.32, 0.1, 0.075])
+        self.button['Save'] = Button(self.buttonAx['Save'], "Save", color = 'grey')
+        self.button['Save'].on_clicked(self.save_fit)
+        
         ##sliders#####
         self.sliderAx = {}
         self.slider = {}
@@ -185,6 +191,10 @@ class Window: #plot object
         self.fit = fit_class.Fit(data, estimates)
         
         return
+    
+    def save_fit(self, event):
+        if self.fit:
+            self.fit.save_fit(self.name)
 
     def mainAx_click(self, event):
         
@@ -398,7 +408,7 @@ class Window: #plot object
             
 
 
-window = Window()
+window = Window("my_fit")
 window.add_data(data)
 window.draw()
 window.update()
