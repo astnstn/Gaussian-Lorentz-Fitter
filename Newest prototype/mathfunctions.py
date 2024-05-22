@@ -107,7 +107,7 @@ class MathFunction:
 
     def __repr__(self):
         fnames = [fun.__repr__() for fun in self.functions]
-        return "***MathFunction***\n\n" + "\n".join(fnames)
+        return "***MathFunction***\n\n" + "\n\n".join(fnames)
 
     # uses default parameters if no arguments set
     def __call__(self, x, *args):

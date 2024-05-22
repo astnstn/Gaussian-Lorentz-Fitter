@@ -8,14 +8,40 @@ plt.ion()
 
 
 class DraggableNode:
+    """
+    DraggableNode class is used to interactively change function 
+    parameter estimates.
+
+    Currently hardcoded for gaussian functions with linear background function. 
+    """
+
     lock = None  # only one can be animated at a time
     composite = False  # determines whether to plot individually or summed
     functions = []  # the functions
     _instances = []  # widget instances
 
     def __init__(self, x, y, sigma, xspace=None):
+        """
+        Create a draggable node on the canvas
 
-        # initialises
+        Parameters
+        ----------
+        x : float
+            x coordinate. The mean of gaussian function.
+        y : float
+            y coordinate. The peak of gaussian function.
+        sigma : float
+            standard deviation of gaussian function.
+        xspace : TYPE, optional
+            DESCRIPTION. The default is None.
+
+        Returns
+        -------
+        None.
+
+        """
+
+        # the plotted node
         self.node = plt.gca().plot(x, y, 'o', color='red', picker=10)[0]
         self.press = None
         self.background = None
@@ -23,6 +49,7 @@ class DraggableNode:
         self.xspace = xspace
 
         DraggableNode.functions.append(self.function)
+
         self.line = plt.gca().plot(
             xspace, self.function(xspace), color='grey')[0]
         DraggableNode._instances.append(self)
@@ -39,19 +66,23 @@ class DraggableNode:
             'pick_event', self.on_pick)
 
     def on_press(self, event):
-
+        # return if not middle mouse button
         if event.button == 2:
             return
 
-        'on button press we will see if the mouse is over us and store some data'
+        # on button press we will see if the mouse is over us and store some data
         if event.inaxes != self.node.axes:
             return
-        if DraggableNode.lock is not None:
-            return  # if dragging something else then return
 
+        # if dragging something else then return
+        if DraggableNode.lock is not None:
+            return
+
+        # return if click not in node
         contains, attrd = self.node.contains(event)
         if not contains:
-            return  # return if click not in node
+            return
+
         x0, y0 = self.node.get_xdata(), self.node.get_ydata()  # x and y of node
         # stores the coordinates of the node and of the event
         self.press = x0, y0, event.xdata, event.ydata
@@ -87,8 +118,10 @@ class DraggableNode:
         'on motion we will move the rect if the mouse is over us'
         if DraggableNode.lock is not self:
             return
+
         if event.inaxes != self.node.axes:
             return
+
         x0, y0, xpress, ypress = self.press
 
         # update node coords
@@ -133,8 +166,10 @@ class DraggableNode:
         canvas.blit(axes.bbox)
 
     def on_pick(self, event):
+
         if event.artist != self.node:
             return
+
         self.press = self.node.get_xdata(), self.node.get_ydata(
         ), self.node.get_xdata(), self.node.get_ydata()
         x0, x1 = self.node.axes.get_xlim()
@@ -177,12 +212,20 @@ class DraggableNode:
 
 class Window:
     def __init__(self, x, y):
+
+        # set the x and y data
         self.x = x
         self.y = y
+
+        # create and set figure and axes
         self.fig = plt.figure()
         self.ax = self.fig.add_subplot(111)
+
+        # plot the data as points
         self.ax.plot(x, y, '.')
         xmin, xmax = self.ax.get_xlim()
+
+        # create x array for the purpose of plotting smooth lines
         self.xspace = np.linspace(xmin, xmax, 1000)
 
         self.peaks = []
@@ -257,10 +300,8 @@ class Window:
                     spacing = (ylim[1] - ylim[0])/15
                     texts = [plt.text(mean, amp + spacing, "A: {:.2f} \nμ: {:.2f}\nσ: {:.2f}".format(
                         amp, mean, std), fontsize=8, horizontalalignment='center', weight='bold')]
+
             self.ax.set_xlim(xlim)
             self.ax.set_ylim(ylim)
+
         self.fig.canvas.draw()
-
-
-x, y = np.loadtxt("1996quarter.txt", skiprows=1, unpack=True)
-window = Window(x, y)
