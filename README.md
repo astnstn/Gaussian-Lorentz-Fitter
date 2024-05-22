@@ -8,6 +8,8 @@ The relevant files are in the 'Newest prototype' folder. This uses only Gaussian
 
 ### Usage
 
+See `example.py` for how to create an interactive fitter window.
+
 - Add a Gaussian curve with middle mouse click
 - Drag resulting node by holding left mouse button
 - Change the standard deviation of the curve with the scroll-wheel
