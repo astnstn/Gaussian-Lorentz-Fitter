@@ -2,7 +2,7 @@
 
 Program uses graphical input with some matplotlib widgets to quickly estimate parameters which are then passed to the scipy optimize curve_fit function.
 
-**DISCLAIMER:** This is a very old project I create when I was still learning Python and Git in undergrad. I didn't really anticipate any interest. A rewrite is probably needed but for now I'm updating the readme to give better instructions on how to use the program.
+**WARNING:** This is a very old noob project and the code isn't very pretty. I still like the idea though so I intend to rewrite somewhen. 
 
 The relevant files are in the 'Newest prototype' folder. This uses only Gaussian curves with a small linear offset (y=0) added. The older versions use button and slider widgets which are self-explanatory. 
 
